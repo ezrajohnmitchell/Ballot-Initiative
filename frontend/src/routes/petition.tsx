@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { FileInput } from "@/components/ui/fileinput";
 import { Label } from "@/components/ui/label";
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import Markdown from "react-markdown";
 
 export const Route = createFileRoute("/petition")({
@@ -9,6 +10,17 @@ export const Route = createFileRoute("/petition")({
 });
 
 function Petition() {
+  const [petitionFiles, setPetitionFiles] = useState<File[]>([]);
+
+  const handlePetitionFilesAdded = (files: FileList) => {
+    let existingNames = petitionFiles.map(file => file.name);
+    let newFiles = Array.from(files).filter(file => existingNames.indexOf(file.name) === -1);
+    setPetitionFiles([
+      ...newFiles,
+      ...petitionFiles
+    ])
+  };
+
   return (
     <div className="mb-8 text-left">
       <h1 className="text-3xl">Petition Validation</h1>
@@ -17,7 +29,7 @@ function Petition() {
       </p>
       <div className="border-blue-600 border-t-2 my-5" />
       <Markdown>### Upload Files</Markdown>
-      <div className="grid grid-cols-2 grid-rows-2 grid-flow-col gap-4">
+      <div className="grid grid-cols-1 grid-rows-4 grid-flow-col gap-4">
         <div>
           <Markdown>{`
 #### 📄 Voter Records
@@ -34,13 +46,18 @@ Required columns: \`First_Name\`, \`Last_Name\`, \`Street_Number\`,
         <div>
           <Markdown>{`
 #### ✍️ Petition Signatures
-Upload your PDF file containing petition pages with signatures. Each file will be cropped to focus on the section where the signatures are located. 
+Upload your files containing petition pages with signatures. Each file will be cropped to focus on the section where the signatures are located. 
 Ensure these sections have the printed name and address of the voter. 
 `}</Markdown>
         </div>
         <div className="row-span-1">
-          <Label htmlFor="petition-signatures">Choose PDF file:</Label>
-          <FileInput id="petition-signatures" />
+          <Label htmlFor="petition-signatures">+ Add Signature files</Label>
+          <FileInput id="petition-signatures" multiple onFilesAdded={handlePetitionFilesAdded} style={{ display: 'none' }} />
+          <ul>
+            {petitionFiles.map(file => (
+              <li>{file.name}</li>
+            ))}
+          </ul>
         </div>
       </div>
       <div className="border-gray-600 border-t-2 my-5">

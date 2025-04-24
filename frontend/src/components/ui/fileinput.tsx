@@ -2,20 +2,20 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+interface FileInputProps extends React.ComponentPropsWithoutRef<"input"> {
+  onFilesAdded?: (event: FileList) => void;
+}
+
 function FileInput({
+  onFilesAdded,
   className,
   type,
   ...props
-}: React.ComponentProps<"input">) {
-  const [selectedFile, setSelectedFile] = React.useState("No file chosen");
-
-  const { id, ...rest } = props;
-
+}: React.ComponentProps<"input"> & FileInputProps) {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setSelectedFile(event.target.files[0].name);
-    } else {
-      setSelectedFile("No file chosen");
+    if (event.target.files && event.target.files.length > 0) {
+      onFilesAdded?.(event.target.files);
+      event.target.value = ""
     }
   };
 

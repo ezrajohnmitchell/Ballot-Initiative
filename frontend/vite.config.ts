@@ -16,5 +16,6 @@ export default defineConfig({
     build: {
         outDir: '../dist',
         emptyOutDir: true
-    }
+    },
+    assetsInclude: ['node_modules/tesseract-wasm/dist/*']
 })
