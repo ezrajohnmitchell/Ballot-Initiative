@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "react-image-crop/dist/ReactCrop.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -114,21 +115,27 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   h1 {
     @apply text-3xl font-bold text-gray-900 dark:text-white mb-2;
   }
+
   h3 {
     @apply text-2xl font-bold text-gray-900 dark:text-white mb-2;
   }
+
   h4 {
     @apply text-xl font-bold text-gray-900 dark:text-white mb-2;
   }
+
   p {
     @apply mb-2;
   }
+
   code {
     background-color: #1a1c24;
     color: #09ab3b;
