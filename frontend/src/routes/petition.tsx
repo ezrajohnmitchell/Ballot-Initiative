@@ -25,18 +25,18 @@ function Petition() {
           <p className="text-gray-400 mb-2">
             Upload your CSV file containing voter registration data.
             <br />
-            Required columns: <code>First_Name</code>, <code>Last_Name</code>, <code>Street_Number</code>, 
+            Required columns: <code>First_Name</code>, <code>Last_Name</code>, <code>Street_Number</code>,
             <code>Street_Name</code>, <code>Street_Type</code>, <code>Street_Dir_Suffix</code>
           </p>
         </div>
 
         <VoterFilePicker />
-        
+
         <div>
           <h4 className="text-lg font-semibold mb-1">✍️ Petition Signatures</h4>
           <p className="text-gray-400 mb-2">
-            Upload your files containing petition pages with signatures. 
-            Each file will be cropped to focus on the section where the signatures are located. 
+            Upload your files containing petition pages with signatures.
+            Each file will be cropped to focus on the section where the signatures are located.
             Ensure these sections have the printed name and address of the voter.
           </p>
         </div>

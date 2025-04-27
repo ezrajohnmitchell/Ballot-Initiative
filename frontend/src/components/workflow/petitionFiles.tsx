@@ -3,13 +3,14 @@ import { type Crop, PercentCrop, PixelCrop, ReactCrop } from "react-image-crop"
 
 import { Button } from "@/components/ui/button";
 import { FileInput } from "@/components/ui/fileinput";
+import { Paginator } from "../ui/paginator";
 
 interface CroppedImage {
   image: File,
   crop?: Crop
 }
 
-function PetitionFiles({}){
+function PetitionFiles({ }) {
 
   const [petitionFiles, setPetitionFiles] = useState<CroppedImage[]>([]);
   const [selectedPetition, setSelectedPetition] = useState(-1); //-1 meaning nothing is selected
@@ -24,7 +25,7 @@ function PetitionFiles({}){
     let existingNames = petitionFiles.map(file => file.image.name);
     let newFiles: CroppedImage[] = Array.from(files).filter(
       file => existingNames.indexOf(file.name) === -1).map(file => ({ image: file })
-    );
+      );
 
     //need to convert pdfs to images here
     if (newFiles.length > 0) {
@@ -55,24 +56,26 @@ function PetitionFiles({}){
           <li key={file.image.name}>{file.image.name}</li>
         ))}
       </ul>
-    {selectedPetition !== -1 && petitionFiles[selectedPetition] && (
-      <ReactCrop
-        crop={petitionFiles[selectedPetition].crop}
-        onChange={
-          c => {
-            let oldCrop = petitionFiles[selectedPetition];
-            let files = [...petitionFiles];
-            files[selectedPetition] = {
-              image: oldCrop.image,
-              crop: c
+      {selectedPetition !== -1 && petitionFiles[selectedPetition] && (
+        <>
+          <Paginator page={selectedPetition} max={petitionFiles.length - 1} min={0} onPageChange={setSelectedPetition} />
+          <ReactCrop
+            crop={petitionFiles[selectedPetition].crop}
+            onChange={
+              c => {
+                let oldCrop = petitionFiles[selectedPetition];
+                let files = [...petitionFiles];
+                files[selectedPetition] = {
+                  image: oldCrop.image,
+                  crop: c
+                }
+                setPetitionFiles(files);
+              }
             }
-            setPetitionFiles(files);
-          }
-        }
-      >
-        <img src={URL.createObjectURL(petitionFiles[selectedPetition].image)} />
-      </ReactCrop>
-    ) }
+          >
+            <img src={URL.createObjectURL(petitionFiles[selectedPetition].image)} />
+          </ReactCrop>
+        </>)}
     </div>
   );
 }
