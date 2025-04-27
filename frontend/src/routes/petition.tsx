@@ -1,10 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
-import { FileInput } from "@/components/ui/fileinput";
-import { Label } from "@/components/ui/label";
 
 import PetitionFiles from "@/components/workflow/petitionFiles";
+import VoterFilePicker from "@/components/workflow/voterFile";
 
 export const Route = createFileRoute("/petition")({
   component: Petition,
@@ -30,12 +29,9 @@ function Petition() {
             <code>Street_Name</code>, <code>Street_Type</code>, <code>Street_Dir_Suffix</code>
           </p>
         </div>
-        <div className="row-span-1">
-          <Button>
-            <Label htmlFor="voter-records">Choose CSV file:</Label>
-            <FileInput id="voter-records" />
-          </Button>
-        </div>
+
+        <VoterFilePicker />
+        
         <div>
           <h4 className="text-lg font-semibold mb-1">✍️ Petition Signatures</h4>
           <p className="text-gray-400 mb-2">
@@ -44,6 +40,7 @@ function Petition() {
             Ensure these sections have the printed name and address of the voter.
           </p>
         </div>
+
         <PetitionFiles />
       </div>
       <div className="border-gray-600 border-t-2 my-5">
