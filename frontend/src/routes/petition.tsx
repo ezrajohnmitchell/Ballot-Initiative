@@ -5,6 +5,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import Markdown from "react-markdown";
 import { type Crop, PercentCrop, PixelCrop, ReactCrop } from "react-image-crop"
+import { Paginator } from "@/components/ui/paginator";
 
 export const Route = createFileRoute("/petition")({
   component: Petition,
@@ -64,26 +65,29 @@ Ensure these sections have the printed name and address of the voter.
           <Label htmlFor="petition-signatures">+ Add Signature files</Label>
           <FileInput id="petition-signatures" multiple onFilesAdded={handlePetitionFilesAdded} style={{ display: 'none' }} />
           <ul>
-            {petitionFiles.map(file => (
-              <li key={file.image.name}>{file.image.name}</li>
+            {petitionFiles.map((file, index) => (
+              <li key={file.image.name} onClick={() => setSelectedPetition(index)} className="hover:cursor-pointer">{file.image.name}</li>
             ))}
           </ul>
         </div>
       </div>
-      <div>
+      <div className="inline-block">
         {selectedPetition !== -1 && petitionFiles[selectedPetition] &&
-          <ReactCrop crop={petitionFiles[selectedPetition].crop} onChange={c => {
-            let oldCrop = petitionFiles[selectedPetition];
-            let files = [...petitionFiles];
-            files[selectedPetition] = {
-              image: oldCrop.image,
-              crop: c
-            }
-            setPetitionFiles(files);
-          }}>
-            <img src={URL.createObjectURL(petitionFiles[selectedPetition].image)} />
+          <>
+            <Paginator page={selectedPetition} max={petitionFiles.length - 1} min={0} onPageChange={setSelectedPetition} />
+            <ReactCrop crop={petitionFiles[selectedPetition].crop} onChange={c => {
+              let oldCrop = petitionFiles[selectedPetition];
+              let files = [...petitionFiles];
+              files[selectedPetition] = {
+                image: oldCrop.image,
+                crop: c
+              }
+              setPetitionFiles(files);
+            }}>
+              <img src={URL.createObjectURL(petitionFiles[selectedPetition].image)} className="w-screen h-auto md:h-screen md:w-auto" />
 
-          </ReactCrop>
+            </ReactCrop>
+          </>
         }
       </div>
       <div className="border-gray-600 border-t-2 my-5">
@@ -97,7 +101,7 @@ Ensure these sections have the printed name and address of the voter.
       <div className="border-gray-600 border-t-2 my-5">
         <h3>Maintenance</h3>
         <div className="text-center">
-          <Button variant={"outline"} className="w-1/2">
+          <Button variant={"outline"} className="w-1/2" onClick={() => setPetitionFiles([])}>
             🗑️ Clear All Files
           </Button>
         </div>
