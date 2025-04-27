@@ -50,8 +50,10 @@ Required columns: \`First_Name\`, \`Last_Name\`, \`Street_Number\`,
 `}</Markdown>
         </div>
         <div className="row-span-1">
-          <Label htmlFor="voter-records">Choose CSV file:</Label>
-          <FileInput id="voter-records" />
+          <Button>
+            <Label htmlFor="voter-records">Choose CSV file:</Label>
+            <FileInput id="voter-records" />
+          </Button>
         </div>
         <div>
           <Markdown>{`
@@ -61,8 +63,10 @@ Ensure these sections have the printed name and address of the voter.
 `}</Markdown>
         </div>
         <div className="row-span-1">
-          <Label htmlFor="petition-signatures">+ Add Signature files</Label>
-          <FileInput id="petition-signatures" multiple onFilesAdded={handlePetitionFilesAdded} style={{ display: 'none' }} />
+          <Button>
+            <Label htmlFor="petition-signatures">+ Add Signature files</Label>
+            <FileInput id="petition-signatures" multiple onFilesAdded={handlePetitionFilesAdded} style={{ display: 'none' }} />
+          </Button>
           <ul>
             {petitionFiles.map(file => (
               <li key={file.image.name}>{file.image.name}</li>
