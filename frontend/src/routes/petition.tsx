@@ -3,7 +3,6 @@ import { FileInput } from "@/components/ui/fileinput";
 import { Label } from "@/components/ui/label";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import Markdown from "react-markdown";
 import { type Crop, PercentCrop, PixelCrop, ReactCrop } from "react-image-crop"
 
 export const Route = createFileRoute("/petition")({
@@ -38,16 +37,17 @@ function Petition() {
         Automated signature verification for ballot initiatives
       </p>
       <div className="border-blue-600 border-t-2 my-5" />
-      <Markdown>### Upload Files</Markdown>
+
+      <h3 className="text-xl font-semibold mb-2">Upload Files</h3>
       <div className="grid grid-cols-1 grid-rows-4 grid-flow-col gap-4">
         <div>
-          <Markdown>{`
-#### 📄 Voter Records
-Upload your CSV file containing voter registration data.
-
-Required columns: \`First_Name\`, \`Last_Name\`, \`Street_Number\`, 
-\`Street_Name\`, \`Street_Type\`, \`Street_Dir_Suffix\`
-`}</Markdown>
+          <h4 className="text-lg font-semibold mb-1">📄 Voter Records</h4>
+          <p className="text-gray-400 mb-2">
+            Upload your CSV file containing voter registration data.
+            <br />
+            Required columns: <code>First_Name</code>, <code>Last_Name</code>, <code>Street_Number</code>, 
+            <code>Street_Name</code>, <code>Street_Type</code>, <code>Street_Dir_Suffix</code>
+          </p>
         </div>
         <div className="row-span-1">
           <Button>
@@ -56,11 +56,12 @@ Required columns: \`First_Name\`, \`Last_Name\`, \`Street_Number\`,
           </Button>
         </div>
         <div>
-          <Markdown>{`
-#### ✍️ Petition Signatures
-Upload your files containing petition pages with signatures. Each file will be cropped to focus on the section where the signatures are located. 
-Ensure these sections have the printed name and address of the voter. 
-`}</Markdown>
+          <h4 className="text-lg font-semibold mb-1">✍️ Petition Signatures</h4>
+          <p className="text-gray-400 mb-2">
+            Upload your files containing petition pages with signatures. 
+            Each file will be cropped to focus on the section where the signatures are located. 
+            Ensure these sections have the printed name and address of the voter.
+          </p>
         </div>
         <div className="row-span-1">
           <Button>
@@ -74,38 +75,39 @@ Ensure these sections have the printed name and address of the voter.
           </ul>
         </div>
       </div>
-      <div>
-        {selectedPetition !== -1 && petitionFiles[selectedPetition] &&
-          <ReactCrop crop={petitionFiles[selectedPetition].crop} onChange={c => {
-            let oldCrop = petitionFiles[selectedPetition];
-            let files = [...petitionFiles];
-            files[selectedPetition] = {
-              image: oldCrop.image,
-              crop: c
-            }
-            setPetitionFiles(files);
-          }}>
+        {selectedPetition !== -1 && petitionFiles[selectedPetition] && (
+          <ReactCrop
+            crop={petitionFiles[selectedPetition].crop}
+            onChange={ c => {
+              let oldCrop = petitionFiles[selectedPetition];
+              let files = [...petitionFiles];
+              files[selectedPetition] = {
+                image: oldCrop.image,
+                crop: c
+              }
+              setPetitionFiles(files);
+            }}>
             <img src={URL.createObjectURL(petitionFiles[selectedPetition].image)} />
-
           </ReactCrop>
-        }
-      </div>
+          )}
       <div className="border-gray-600 border-t-2 my-5">
-        <h3>Process Files</h3>
+        <h3 className="text-xl font-semibold mb-2">Process Files</h3>
         <div className="text-center">
           <Button variant="destructive" className="w-1/2">
             🚀 Process Files
           </Button>
         </div>
       </div>
+
       <div className="border-gray-600 border-t-2 my-5">
-        <h3>Maintenance</h3>
+        <h3 className="text-xl font-semibold mb-2">Maintenance</h3>
         <div className="text-center">
-          <Button variant={"outline"} className="w-1/2">
+          <Button variant="outline" className="w-1/2">
             🗑️ Clear All Files
           </Button>
         </div>
       </div>
     </div>
+
   );
 }
