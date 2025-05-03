@@ -1,8 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar, items } from "@/components/sidebar";
 import { ModeToggle } from "./components/theme-provider/mode-toggle";
-import Markdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
 import { useLocation } from "@tanstack/react-router";
 
 export default function Layout({ children }: { children?: React.ReactNode }) {
@@ -18,21 +16,12 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
         </header>
         {children}
         <ModeToggle />
-        <footer>
-          <Markdown
-            rehypePlugins={[rehypeRaw]}
-            components={{
-              a(props) {
-                const { node, ...rest } = props;
-                return <a className="text-blue-400 underline" {...rest}></a>;
-              },
-            }}
-          >
-            {`
-<div style='text-align: center; color: #666;'>
-© 2024 Ballot Initiative Project | <a href='#'>Privacy Policy</a> | <a href='#'>Terms of Use</a>
-</div>`}
-          </Markdown>
+        <footer className="text-center text-gray-500">
+          © 2024 Ballot Initiative Project |
+          {" "}
+          <a href="#" className="text-blue-400 underline"> Privacy Policy.</a> |
+          {" "}
+          <a href="#" className="text-blue-400 underline"> Terms of Use.</a>
         </footer>
       </main>
     </SidebarProvider>
