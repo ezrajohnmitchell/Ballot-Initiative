@@ -1,16 +1,16 @@
-import { useVoterStore } from "@/stores/voterStore";
+// import { useVoterStore } from "@/stores/voterStore";
 
 import { Button } from "@/components/ui/button";
 import { FileInput } from "@/components/ui/fileinput";
 import { useRef } from "react";
 
 function VoterFilePicker() {
-  const voterFile = useVoterStore((state) => state.voterFile);
-  const setVoterFile = useVoterStore((state) => state.setVoterFile);
+  // const voterFile = useVoterStore((state) => state.voterFile);
+  // const setVoterFile = useVoterStore((state) => state.setVoterFile);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
-    setVoterFile(file);
+    // setVoterFile(file);
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -33,7 +33,7 @@ function VoterFilePicker() {
         onChange={handleFileChange}
         style={{ display: "none" }}
       />
-      {voterFile && <p>Selected: {voterFile.name}</p>}
+      {/* {voterFile && <p>Selected: {voterFile.name}</p>} */}
     </div>
   );
 }

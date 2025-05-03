@@ -19,7 +19,7 @@ function Petition() {
       <div className="border-blue-600 border-t-2 my-5" />
 
       <h3 className="text-xl font-semibold mb-2">Upload Files</h3>
-      <div className="grid grid-cols-1 grid-rows-4 grid-flow-col gap-4">
+      <div className="flex flex-col gap-4">
         <div>
           <h4 className="text-lg font-semibold mb-1">📄 Voter Records</h4>
           <p className="text-gray-400 mb-2">

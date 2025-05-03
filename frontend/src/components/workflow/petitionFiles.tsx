@@ -1,29 +1,45 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { type Crop, PercentCrop, PixelCrop, ReactCrop } from "react-image-crop"
+import { saveAs } from "file-saver"
 
 import { Button } from "@/components/ui/button";
 import { FileInput } from "@/components/ui/fileinput";
 import { Paginator } from "../ui/paginator";
+import { OcrProvider, TesseractOcr } from "@/lib/ocr";
 
-interface CroppedImage {
+interface ImageState {
   image: File,
-  crop?: Crop
+  crop?: Crop,
 }
 
 function PetitionFiles({ }) {
 
-  const [petitionFiles, setPetitionFiles] = useState<CroppedImage[]>([]);
+  const [petitionFiles, setPetitionFiles] = useState<ImageState[]>([]);
   const [selectedPetition, setSelectedPetition] = useState(-1); //-1 meaning nothing is selected
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
 
   const handleButtonClick = () => {
     inputRef.current?.click();
   };
 
+  const [ocr, setOcr] = useState<OcrProvider>()
+
+  useEffect(() => {
+    let tesseractOcr = new TesseractOcr();
+    tesseractOcr.initializeWorker().then(() => {
+      setOcr(tesseractOcr);
+    })
+
+    return () => {
+      tesseractOcr.terminateWorker();
+    };
+  }, [])
+
   const handlePetitionFilesAdded = (files: FileList) => {
     let existingNames = petitionFiles.map(file => file.image.name);
-    let newFiles: CroppedImage[] = Array.from(files).filter(
+    let newFiles: ImageState[] = Array.from(files).filter(
       file => existingNames.indexOf(file.name) === -1).map(file => ({ image: file })
       );
 
@@ -36,16 +52,33 @@ function PetitionFiles({ }) {
     }
   };
 
+  const submitOcr = async (crop: PercentCrop, imageIndex: number) => {
+    if (petitionFiles.length <= imageIndex) return;
+    const { image } = petitionFiles[imageIndex];
+    if (!image || !ocr || crop.width === 0 || crop.height === 0 || !imageRef?.current) return; //TODO hide add file button until OCR is ready or add a queue here
+
+    const width = imageRef.current.width;
+    const height = imageRef.current.height;
+
+    const imageBitMap = await createImageBitmap(image, crop.x / 100 * width, crop.y / 100 * height, crop.width / 100 * width, crop.height / 100 * height);
+    const canvas = new OffscreenCanvas(imageBitMap.width, imageBitMap.height);
+    canvas.getContext('bitmaprenderer')?.transferFromImageBitmap(imageBitMap);
+    const imageBlob = await canvas.convertToBlob({ type: 'image/png' });
+    saveAs(imageBlob, 'cropped.png');
+
+    ocr.getSignatures(imageBlob);
+  };
+
   return (
-    <div className="row-span-1">
-      <Button type="button" onClick={handleButtonClick}>
+    <div className="flex flex-col">
+      <Button className="self-start" type="button" onClick={handleButtonClick}>
         + Add Signature Files
       </Button>
       <FileInput
         ref={inputRef}
         id="petition-signatures"
         type="file"
-        accept=".pdf"
+        accept=".pdf,image/*"
         multiple
         onFilesAdded={handlePetitionFilesAdded}
         style={{ display: "none" }}
@@ -60,20 +93,24 @@ function PetitionFiles({ }) {
         <>
           <Paginator page={selectedPetition} max={petitionFiles.length - 1} min={0} onPageChange={setSelectedPetition} />
           <ReactCrop
+            className="self-center"
             crop={petitionFiles[selectedPetition].crop}
             onChange={
               c => {
                 let oldCrop = petitionFiles[selectedPetition];
                 let files = [...petitionFiles];
+
+                //debouncing so we don't process image cropping to often
                 files[selectedPetition] = {
                   image: oldCrop.image,
-                  crop: c
+                  crop: c,
                 }
                 setPetitionFiles(files);
               }
             }
+            onComplete={(_: PixelCrop, crop: PercentCrop) => { submitOcr(crop, selectedPetition) }}
           >
-            <img src={URL.createObjectURL(petitionFiles[selectedPetition].image)} />
+            <img src={URL.createObjectURL(petitionFiles[selectedPetition].image)} className="w-screen h-auto md:h-screen md:w-auto" ref={imageRef} />
           </ReactCrop>
         </>)}
     </div>
