@@ -18,7 +18,6 @@ function PetitionFiles({ }) {
   const [selectedPetition, setSelectedPetition] = useState(-1); //-1 meaning nothing is selected
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const imageRef = useRef<HTMLImageElement>(null);
 
   const handleButtonClick = () => {
     inputRef.current?.click();
@@ -27,6 +26,7 @@ function PetitionFiles({ }) {
   const [ocr, setOcr] = useState<OcrProvider>()
 
   useEffect(() => {
+    //TODO add timeout for tesseract, docs say it should be periodically refreshed
     let tesseractOcr = new TesseractOcr();
     tesseractOcr.initializeWorker().then(() => {
       setOcr(tesseractOcr);
@@ -55,16 +55,16 @@ function PetitionFiles({ }) {
   const submitOcr = async (crop: PercentCrop, imageIndex: number) => {
     if (petitionFiles.length <= imageIndex) return;
     const { image } = petitionFiles[imageIndex];
-    if (!image || !ocr || crop.width === 0 || crop.height === 0 || !imageRef?.current) return; //TODO hide add file button until OCR is ready or add a queue here
+    if (!image || !ocr || crop.width === 0 || crop.height === 0) return; //TODO hide add file button until OCR is ready or add a queue here
 
-    const width = imageRef.current.width;
-    const height = imageRef.current.height;
-
-    const imageBitMap = await createImageBitmap(image, crop.x / 100 * width, crop.y / 100 * height, crop.width / 100 * width, crop.height / 100 * height);
-    const canvas = new OffscreenCanvas(imageBitMap.width, imageBitMap.height);
-    canvas.getContext('bitmaprenderer')?.transferFromImageBitmap(imageBitMap);
+    const fullImage = await createImageBitmap(image);
+    const width = fullImage.width;
+    const height = fullImage.height;
+    const croppedImage = await createImageBitmap(image, crop.x / 100 * width, crop.y / 100 * height, crop.width / 100 * width, crop.height / 100 * height);
+    const canvas = new OffscreenCanvas(croppedImage.width, croppedImage.height);
+    canvas.getContext('bitmaprenderer')?.transferFromImageBitmap(croppedImage);
     const imageBlob = await canvas.convertToBlob({ type: 'image/png' });
-    saveAs(imageBlob, 'cropped.png');
+    // saveAs(imageBlob, 'cropped.png');
 
     ocr.getSignatures(imageBlob);
   };
@@ -110,7 +110,7 @@ function PetitionFiles({ }) {
             }
             onComplete={(_: PixelCrop, crop: PercentCrop) => { submitOcr(crop, selectedPetition) }}
           >
-            <img src={URL.createObjectURL(petitionFiles[selectedPetition].image)} className="w-screen h-auto md:h-screen md:w-auto" ref={imageRef} />
+            <img src={URL.createObjectURL(petitionFiles[selectedPetition].image)} className="w-screen h-auto md:h-screen md:w-auto" />
           </ReactCrop>
         </>)}
     </div>
