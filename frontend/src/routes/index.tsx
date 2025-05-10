@@ -25,10 +25,8 @@ function Index() {
       </p>
 
       <figure className="text-center my-5">
-      {/* Light mode image */}
-      <img src="ballot_initiative_schematic.png" alt="Ballot Initiative Schematic" className="mx-auto block dark:hidden" />
-      {/* Dark mode image */}
-      <img src="ballot_initiative_schematic_negative.png" alt="Ballot Initiative Schematic (Dark)" className="mx-auto hidden dark:block" />
+      {/* Light/dark mode reactive image */}
+      <img src="ballot_initiative_schematic.png" alt="Ballot Initiative Schematic" className="mx-auto dark:invert" />
         <figcaption className="text-black dark:text-white">
           <em>Core process for validating signatures</em>
         </figcaption>
