@@ -17,16 +17,17 @@ function InstructionStep({
   return (
     <AccordionItem
       value={title}
-      className="px-4 mb-5 dark:border-gray-500 border-black border-1 rounded-sm"
+      data-complete={isComplete}
+      className="group px-4 mb-5 data-[complete=true]:bg-success/20 data-[complete=true]:text-muted-foreground/95 border-border border-1 rounded-sm"
     >
-      <AccordionTrigger>
+      <AccordionTrigger className="hover:cursor-pointer">
         <div className="flex items-center gap-2">
           {isComplete ? (
-            <CheckCircle className="text-green-500" />
+            <CheckCircle className="text-success" />
           ) : (
-            <Circle className="text-gray-400" />
+            <Circle className="text-muted-foreground" />
           )}
-          <span>{title}</span>
+          <span className="group-data-[complete=true]:text-muted-foreground/95">{title}</span>
         </div>
       </AccordionTrigger>
       <AccordionContent>
