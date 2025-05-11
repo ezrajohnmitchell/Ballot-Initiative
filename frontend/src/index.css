@@ -144,4 +144,8 @@
     background-color: #1a1c24;
     color: #09ab3b;
   }
+
+  .link {
+    @apply text-blue-400 hover:text-blue-500 underline
+  }
 }

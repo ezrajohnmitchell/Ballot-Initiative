@@ -19,9 +19,9 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
         <footer className="text-center text-gray-500">
           © 2024 Ballot Initiative Project |
           {" "}
-          <a href="#" className="text-blue-400 underline"> Privacy Policy.</a> |
+          <a href="#" className="link"> Privacy Policy.</a> |
           {" "}
-          <a href="#" className="text-blue-400 underline"> Terms of Use.</a>
+          <a href="#" className="link"> Terms of Use.</a>
         </footer>
       </main>
     </SidebarProvider>

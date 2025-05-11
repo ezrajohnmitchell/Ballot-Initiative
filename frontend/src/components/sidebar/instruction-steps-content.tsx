@@ -15,7 +15,8 @@ export const instructionStepsContent = [
           <li>Street_Type</li>
           <li>Street_Dir_Suffix</li>
         </ul>
-        <i>Example: Download a sample of fake voter records here.</i>
+        <i>Example: Download a sample of fake voter records <a className="link" href="fake_voter_records.csv" download>here.</a>
+        </i>
       </ul>
     ),
     selector: (state: AppStateStore) => state.voterFileUploaded,
@@ -27,7 +28,7 @@ export const instructionStepsContent = [
         <li>PDF format only</li>
         <li>Clear, legible scans</li>
         <li>One signature per line</li>
-        <i>Example: Download a sample of fake signed petitions here.</i>
+        <i>Example: Download a sample of fake signed petitions <a className="link" download>here.</a></i>
       </ul>
     ),
 
