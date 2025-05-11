@@ -1,21 +1,20 @@
 import { useEffect, useRef, useState } from "react";
-import { type Crop, PercentCrop, PixelCrop, ReactCrop } from "react-image-crop"
-import { saveAs } from "file-saver"
+import { type PercentCrop, PixelCrop, ReactCrop } from "react-image-crop"
 
 import { Button } from "@/components/ui/button";
 import { FileInput } from "@/components/ui/fileinput";
 import { Paginator } from "../ui/paginator";
 import { OcrProvider, TesseractOcr } from "@/lib/ocr";
-
-interface ImageState {
-  image: File,
-  crop?: Crop,
-}
+import { usePetitionStore, ImageState } from "@/stores/petition-store";
+import { useAppStateStore } from "@/stores/app-state-store";
 
 function PetitionFiles({ }) {
 
-  const [petitionFiles, setPetitionFiles] = useState<ImageState[]>([]);
   const [selectedPetition, setSelectedPetition] = useState(-1); //-1 meaning nothing is selected
+
+  const petitionFiles = usePetitionStore((state) => state.petitionFiles);
+  const setPetitionFiles = usePetitionStore((state) => state.setPetitionFiles);
+  const setPetitionFileUploaded = useAppStateStore((state) => state.setPetitionFileUploaded);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -49,7 +48,9 @@ function PetitionFiles({ }) {
       if (selectedPetition === -1) {
         setSelectedPetition(0);
       }
+      setPetitionFileUploaded(true);
     }
+    else setPetitionFileUploaded(false);
   };
 
   const submitOcr = async (crop: PercentCrop, imageIndex: number) => {

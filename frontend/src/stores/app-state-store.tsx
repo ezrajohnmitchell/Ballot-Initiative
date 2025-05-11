@@ -7,7 +7,7 @@ export interface AppStateStore {
   tempFilesCleared: boolean;
 
   setVoterFileUploaded: (value: boolean) => void;
-  setSignatureFileUploaded: (value: boolean) => void;
+  setPetitionFileUploaded: (value: boolean) => void;
   setHasRunMatching: (value: boolean) => void;
   setTempFilesCleared: (value: boolean) => void;
 
@@ -21,7 +21,7 @@ export const useAppStateStore = create<AppStateStore>((set) => ({
   tempFilesCleared: false,
 
   setVoterFileUploaded: (v) => set({ voterFileUploaded: v }),
-  setSignatureFileUploaded: (v) => set({ signatureFileUploaded: v }),
+  setPetitionFileUploaded: (v) => set({ signatureFileUploaded: v }),
   setHasRunMatching: (v) => set({ hasRunMatching: v }),
   setTempFilesCleared: (v) => set({ tempFilesCleared: v }),
 
