@@ -42,14 +42,14 @@ export function AppSidebar() {
       <SidebarHeader>
         <SidebarGroupLabel>Ballot Initiative</SidebarGroupLabel>
       </SidebarHeader>
-      <SidebarContent className="[overflow:overlay] [&::-webkit-scrollbar-track]:bg-black-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar]:w-2 h-full">
-        <SidebarGroup className="border-b dark:border-gray-500 border-black">
+      <SidebarContent className="[overflow:overlay]  [&::-webkit-scrollbar-thumb]:bg-sidebar-ring [&::-webkit-scrollbar]:w-2 h-full">
+        <SidebarGroup className="border-b border-foreground">
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem
                   key={item.title}
-                  className={`${location.pathname === item.url ? "bg-gray-200 dark:bg-gray-800 rounded-sm" : ""}`}
+                  className={`${location.pathname === item.url ? "bg-sidebar-accent text-sidebar-accent-foreground rounded-sm" : ""}`}
                 >
                   <SidebarMenuButton asChild>
                     <Link to={item.url}>
@@ -78,7 +78,7 @@ export function AppSidebar() {
             </Accordion>
           )}
           {state === "expanded" && location.pathname === "/" && (
-            <div className="p-5 bg-green-400/30 text-white rounded-sm">
+            <div className="p-5 bg-sidebar-primary text-sidebar-primary-foreground rounded-sm">
               👆Visit the Petition Validation page to get started.
             </div>
           )}
